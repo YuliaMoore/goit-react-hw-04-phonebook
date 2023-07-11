@@ -1,15 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Div, Label, Input } from './Filter.styled';
+import { Label } from './Filter.styled';
 
-function Filter({ value, onChangeFilter }) {
+function Filter({ onChange }) {
   return (
-    <Div>
-      <Label>
-        Find contcts by name
-        <Input type="text" value={value} onChange={onChangeFilter} />
-      </Label>
-    </Div>
+    <Label>
+      Find contacts by name
+      <input onChange={onChange} />
+    </Label>
   );
 }
 

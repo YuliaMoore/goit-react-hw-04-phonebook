@@ -1,70 +1,70 @@
-import React from 'react';
-import { nanoid } from 'nanoid';
-import { Form, Label, Button, Input } from './ContactForm.styled';
+import React, { useState } from 'react';
+import { Form } from './ContactForm.styled';
+import PropTypes from 'prop-types';
 
-class ContactForm extends React.Component {
-  state = {
-    name: '',
-    number: '',
+const ContactForm = ({ onSubmit }) => {
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
+  const onHandleChange = e => {
+    const { name, value } = e.target;
+
+    switch (name) {
+      case 'name':
+        setName(value);
+        break;
+      case 'number':
+        setNumber(value);
+        break;
+
+      default:
+        break;
+    }
   };
 
-  nameInputId = nanoid();
-  numberInputId = nanoid();
-
-  handleSubmit = event => {
-    event.preventDefault();
-
-    // Вызов функции onSubmit с передачей объекта контакта
-    this.props.onSubmit({ name: this.state.name, number: this.state.number });
-
-    // Сброс  формы
-    this.reset();
+  const onHandleSubmit = e => {
+    e.preventDefault();
+    onSubmit(name, number);
+    setName('');
+    setNumber('');
   };
 
-  // Обработка изменения значений полей формы
-  handleChange = event => {
-    const { name, value } = event.target;
-    this.setState({ [name]: value });
-  };
-
-  // Сброс формы
-  reset = () => {
-    this.setState({ number: '', name: '' });
-  };
-
-  render() {
-    return (
-      <Form onSubmit={this.handleSubmit}>
-        <Label htmlFor={this.nameInputId}>
+  return (
+    <>
+      <Form onSubmit={onHandleSubmit}>
+        <label>
           Name
-          <Input
+          <input
             type="text"
             name="name"
-            value={this.state.name}
-            onChange={this.handleChange}
+            onChange={onHandleChange}
             pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
             title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
             required
+            value={name}
           />
-        </Label>
+        </label>
 
-        <Label htmlFor={this.numberInputId}>
+        <label>
           Number
-          <Input
+          <input
             type="tel"
             name="number"
-            value={this.state.number}
-            onChange={this.handleChange}
+            value={number}
+            onChange={onHandleChange}
             pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
             title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
             required
           />
-        </Label>
+        </label>
 
-        <Button type="submit">Add contact </Button>
+        <button>Add contact </button>
       </Form>
-    );
-  }
-}
+    </>
+  );
+};
 
 export default ContactForm;
+
+ContactForm.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+};
